@@ -2,8 +2,8 @@ package domain
 
 import (
 	premitive "go.mongodb.org/mongo-driver/bson/primitive"
-	"vehicles/types"
 	"time"
+	"vehicles/types"
 )
 
 type InsuranceDetails struct {
@@ -42,8 +42,15 @@ type VehicleModel struct {
 	BodyType string             `json:"body_type" bson:"body_type"`
 }
 
+type FilterVehicles struct {
+	ID       string `json:"id" bson:"id" query:"id"`
+	DriverID string `json:"driver_id" bson:"driver_id" query:"driver_id"`
+	Status   string `json:"status" bson:"status" query:"status"`
+}
+
 type VehicleRepository interface {
 	CreateVehicle(vehicle Vehicle) error
+	ReadVehicles(vehicles FilterVehicles) ([]Vehicle, error)
 	CreateBrand(brand VehicleBrand) error
 	ReadBrands() ([]VehicleBrand, error)
 	CreateModel(model VehicleModel) error

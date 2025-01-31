@@ -121,13 +121,23 @@ func (service *VehicleService) UpdateVehicleStatus(req types.UpdateStatusReq) er
 		return err
 	}
 
-	vehicleApprovedMessage := types.VehicleApprovalMessage{
-		VehicleID: req.ID.Hex(),
-		DriverID:  "1234",
-	}
-	go func() {
-		_ = service.rabbitMQ.Publish("vehicle.approved", vehicleApprovedMessage)
-	}()
+	if req.Status == "approved" {
+		filterVehicle := domain.FilterVehicles{
+			ID: req.ID.Hex(),
+		}
 
+		vehicle, err := service.repo.ReadVehicles(filterVehicle)
+		if err != nil {
+			return err
+		}
+		vehicleApprovedMessage := types.VehicleApprovalMessage{
+			VehicleID: req.ID.Hex(),
+			DriverID:  vehicle[0].DriverID,
+		}
+
+		go func() {
+			_ = service.rabbitMQ.Publish("vehicle.approved", vehicleApprovedMessage)
+		}()
+	}
 	return nil
 }

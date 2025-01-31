@@ -50,3 +50,9 @@ type UpdateStatusReq struct {
 	ID     premitive.ObjectID `json:"id" bson:"_id"`
 	Status string             `json:"status" bson:"status"`
 }
+
+type FilterVehicles struct {
+	ID       string `json:"id" bson:"id" query:"id"`
+	DriverID string `json:"driver_id" bson:"driver_id" query:"driver_id"`
+	Status   string `json:"status" bson:"status" query:"status"`
+}
