@@ -213,8 +213,6 @@ func setDefaultConfig() {
 		},
 		Mongo: &DBConfig{
 			ConnectionString: "mongodb+srv://litonshil:test1234@cluster0.wyncn.mongodb.net/",
-			//ConnectionString: "mongodb+srv://litonshil:test1234@cluster0.wyncn.mongodb.net/",
-			//ConnectionString: "mongodb+srv://snewaj:d5JozZrX66g5sSyD@mongoloadcluster.bdsnb.mongodb.net/?retryWrites=true&w=majority&appName=MongoLoadCluster",
 		},
 	}
 
