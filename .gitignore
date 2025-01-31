@@ -3,7 +3,10 @@
 *.dll
 *.so
 *.dylib
-.idea
+*.idea
+
+# Ignore backup files
+*~
 
 # Go build and test outputs
 *.out
