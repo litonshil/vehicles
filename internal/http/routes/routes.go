@@ -42,6 +42,6 @@ func (r *Routes) Init() {
 
 	// vehicle
 	g.POST("/vehicles", r.vehicleController.CreateVehicle)
-	g.PATCH("/vehicles/status/:id", r.vehicleController.UpdateVehicleStatus)
+	g.PATCH("/vehicles/:id/status", r.vehicleController.UpdateVehicleStatus)
 
 }
