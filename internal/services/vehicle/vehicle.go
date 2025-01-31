@@ -2,18 +2,21 @@ package vehicle
 
 import (
 	premitive "go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+	"vehicles/infra/rabbitmq"
 	"vehicles/internal/domain"
 	"vehicles/types"
-	"time"
 )
 
 type VehicleService struct {
-	repo domain.VehicleRepository
+	repo     domain.VehicleRepository
+	rabbitMQ *rabbitmq.RabbitMQ
 }
 
-func NewVehicleService(vehicleRepo domain.VehicleRepository) *VehicleService {
+func NewVehicleService(vehicleRepo domain.VehicleRepository, rabbitmq *rabbitmq.RabbitMQ) *VehicleService {
 	return &VehicleService{
-		repo: vehicleRepo,
+		repo:     vehicleRepo,
+		rabbitMQ: rabbitmq,
 	}
 }
 
@@ -118,7 +121,13 @@ func (service *VehicleService) UpdateVehicleStatus(req types.UpdateStatusReq) er
 		return err
 	}
 
-	go PublishVehicleApproval(req.ID.String(), "1234")
+	vehicleApprovedMessage := types.VehicleApprovalMessage{
+		VehicleID: req.ID.Hex(),
+		DriverID:  "1234",
+	}
+	go func() {
+		_ = service.rabbitMQ.Publish("vehicle.approved", vehicleApprovedMessage)
+	}()
 
 	return nil
 }
