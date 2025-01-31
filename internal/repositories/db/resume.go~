@@ -1,0 +1,45 @@
+package db
+
+import (
+	"context"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"vehicles/internal/domain"
+)
+
+func (cr *Repository) GetResumes(ctx context.Context, filter domain.ResumeFilter, offset, limit int) ([]domain.Resume, int64, error) {
+
+	//ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	collection := cr.client.Database("resumeDatabase").Collection("resumes")
+
+	bsonFilter := bson.M{}
+	if filter.Name != "" {
+		bsonFilter["name"] = bson.M{"$regex": filter.Name, "$options": "i"}
+	}
+	if filter.Email != "" {
+		bsonFilter["contact.email"] = bson.M{"$regex": filter.Email, "$options": "i"}
+	}
+	if filter.Phone != "" {
+		bsonFilter["contact.phone"] = bson.M{"$regex": filter.Phone, "$options": "i"}
+	}
+
+	findOptions := options.Find().SetSkip(int64(offset)).SetLimit(int64(limit))
+	cursor, err := collection.Find(ctx, bsonFilter, findOptions)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer cursor.Close(ctx)
+
+	var resumes []domain.Resume
+	if err := cursor.All(ctx, &resumes); err != nil {
+		return nil, 0, err
+	}
+
+	totalCount, err := collection.CountDocuments(ctx, bsonFilter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return resumes, totalCount, nil
+}
