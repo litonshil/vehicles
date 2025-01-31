@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/spf13/cobra"
 	"vehicles/infra/conn"
+	rabbitmq "vehicles/infra/rabbitmq"
 	"vehicles/internal/http/controllers"
 	httpRoutes "vehicles/internal/http/routes"
 	httpServer "vehicles/internal/http/server"
@@ -22,10 +23,11 @@ func serve(cmd *cobra.Command, args []string) {
 	baseContext := context.Background()
 
 	mdbClient := conn.Db()
+	rmq := rabbitmq.RMQ()
 	redisClient := conn.NewCacheClient()
 	dbRepo := db.NewRepository(mdbClient)
 	userSvc := userservice.NewUserService(dbRepo, redisClient)
-	vehicleSvc := vehicleservice.NewVehicleService(dbRepo)
+	vehicleSvc := vehicleservice.NewVehicleService(dbRepo, rmq)
 
 	// HttpServer
 	var HttpServer = httpServer.New()

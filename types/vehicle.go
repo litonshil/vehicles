@@ -15,6 +15,11 @@ type LicenseDetails struct {
 	ExpirationDate time.Time `json:"expiration_date" bson:"expiration_date"`
 }
 
+type VehicleApprovalMessage struct {
+	VehicleID string `json:"vehicle_id" bson:"vehicle_id"`
+	DriverID  string `json:"driver_id" bson:"driver_id"`
+}
+
 type VehicleReq struct {
 	ID               premitive.ObjectID `json:"-"`
 	DriverID         string             `json:"driver_id" bson:"driver_id"`

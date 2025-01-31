@@ -7,6 +7,7 @@ import (
 	"vehicles/config"
 	"vehicles/infra/conn"
 	logger "vehicles/infra/logger"
+	"vehicles/infra/rabbitmq"
 )
 
 var (
@@ -30,9 +31,10 @@ func Execute() {
 	logger.InitLogger()
 	conn.ConnectCache()
 	conn.ConnectDb()
-	conn.InitRabbitMQ()
 
-	defer conn.CloseRabbitMQ()
+	rmq := rabbitmq.InitRabbitMQ()
+
+	defer rmq.Close()
 
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
