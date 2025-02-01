@@ -212,7 +212,7 @@ func setDefaultConfig() {
 			Debug:    true,
 		},
 		Mongo: &DBConfig{
-			ConnectionString: "mongodb+srv://litonshil:test1234@cluster0.wyncn.mongodb.net/",
+			ConnectionString: "mongodb://root:example@localhost:27017",
 		},
 	}
 

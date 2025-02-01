@@ -13,20 +13,21 @@ services:
   db:
     container_name: vehicles_mysql
     image: mysql:8.0.31
-#    build:
-#      context: .
-#      dockerfile: Dockerfile.db
     ports:
       - "3306:3306"
     volumes:
       - vehicles_db:/var/lib/mysql:rw
-#      - ./scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
-
+      - ./scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql  # Uncommented
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
       - MYSQL_DATABASE=vehicles_db
       - MYSQL_USER=vehicles_user
       - MYSQL_PASSWORD=12345678
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     tty: true
     networks:
       - vehicles_networks
@@ -36,7 +37,7 @@ services:
     container_name: redis_dev
     restart: always
     ports:
-      - "6390:6379"
+      - "6380:6379"  # Changed port to avoid conflicts
     environment:
       - DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
       - REDIS_PASSWORD=password123
@@ -58,6 +59,22 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - vehicles_networks  # Added network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    networks:
+      - vehicles_networks  # Added network
 
   vehicles:
     container_name: vehicles
@@ -71,19 +88,22 @@ services:
     environment:
       - CONSUL_URL=http://consul_dev:8500
       - CONSUL_PATH=vehicles
+      - DB_HOST=db
+      - DB_USER=vehicles_user
+      - DB_PASSWORD=12345678
+      - DB_NAME=vehicles_db
+      - REDIS_HOST=redis_dev
+      - REDIS_PASSWORD=password123
+      - MONGO_URI=mongodb://admin:password@mongo_db:27017
     tty: true
     depends_on:
+      - mongo
       - consul
       - db
       - redis
     networks:
       - vehicles_networks
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+    restart: on-failure  # Moved restart policy here
 
 networks:
   vehicles_networks:
@@ -91,6 +111,7 @@ networks:
     driver: bridge
 
 volumes:
+  mongo_data:
   vehicles_db:
     name: vehicles-db-data
   vehicles_cache:
