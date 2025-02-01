@@ -12,7 +12,7 @@ var rc *amqp.Connection
 var ch *amqp.Channel
 
 func InitRabbitMQ() {
-	connectString := "amqp://guest:guest@localhost:5672/"
+	connectString := "amqps://avxpoguo:Da6pggbTCzcN6BiyrTnva-7549c5dU89@fuji.lmq.cloudamqp.com/avxpoguo" //"amqp://guest:guest@localhost:15672/"
 	fmt.Println("Connecting to RabbitMQ at", connectString)
 
 	rc, err := amqp.Dial(connectString)

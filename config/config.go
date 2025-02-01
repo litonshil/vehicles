@@ -195,8 +195,8 @@ func setDefaultConfig() {
 			Host:        "localhost",
 			Name:        "smart-mess",
 			Port:        3306,
-			Username:    "root",
-			Password:    "",
+			Username:    "vehicles_user",
+			Password:    "12345678",
 			MaxLifeTime: 30,
 			MaxIdleConn: 1,
 			MaxOpenConn: 2,
@@ -207,35 +207,35 @@ func setDefaultConfig() {
 			Host:     "localhost",
 			Name:     "menu",
 			Port:     3306,
-			Username: "root",
-			Password: "",
+			Username: "vehicles_user",
+			Password: "12345678",
 			Debug:    true,
 		},
 		Mongo: &DBConfig{
-			ConnectionString: "mongodb://root:example@localhost:27017",
+			ConnectionString: "mongodb://admin:password@localhost:27017",
 		},
 	}
 
 	if c.App.ENV == LOCAL {
 		c.Db.Master.Port = 3306
-		c.Db.Master.Username = "root"
-		c.Db.Master.Password = ""
+		c.Db.Master.Username = "vehicles_user"
+		c.Db.Master.Password = "12345678"
 
 		c.Db.Replica1.Port = 3306
-		c.Db.Replica1.Username = "root"
-		c.Db.Replica1.Password = ""
+		c.Db.Replica1.Username = "vehicles_user"
+		c.Db.Replica1.Password = "12345678"
 	}
 
 	c.Cache = &CacheClient{
 		Redis: &RedisConfig{
-			Host:     "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com", //"127.0.0.1",
-			Port:     18972,                                                       //6379,
-			Username: "snewaj",                                                    // "",
-			Password: "@pkE@6AeHEKCL3z",                                           //"",
-			//Host:            "127.0.0.1",
-			//Port:            6379,
-			//Username:        "", // "",
-			//Password:        "",
+			//Host:     "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com", //"127.0.0.1",
+			//Port:     18972,                                                       //6379,
+			//Username: "snewaj",                                                    // "",
+			//Password: "@pkE@6AeHEKCL3z",                                           //"",
+			Host:            "127.0.0.1",
+			Port:            6380,
+			Username:        "",
+			Password:        "password123",
 			Database:        0,
 			ValueExpiredIn:  10,
 			MandatoryPrefix: "user:",
@@ -244,7 +244,7 @@ func setDefaultConfig() {
 
 	c.Queue = &QueueClient{
 		Asynq: &AsynqConfig{
-			RedisAddr:        "127.0.0.1:6379",
+			RedisAddr:        "127.0.0.1:6380",
 			DB:               15,
 			Concurrency:      10,
 			Queue:            "menu",
