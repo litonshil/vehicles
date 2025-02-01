@@ -3,9 +3,8 @@ package db
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
-	premitive "go.mongodb.org/mongo-driver/bson/primitive"
-	"vehicles/internal/domain"
 	"time"
+	"vehicles/internal/domain"
 )
 
 func (repo *Repository) CreateVehicle(vehicle domain.Vehicle) error {
@@ -85,7 +84,7 @@ func (repo *Repository) ReadModels() ([]domain.VehicleModel, error) {
 	return models, nil
 }
 
-func (repo *Repository) UpdateVehicleStatus(id premitive.ObjectID, status string) error {
+func (repo *Repository) UpdateVehicleStatus(id string, status string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -97,3 +96,22 @@ func (repo *Repository) UpdateVehicleStatus(id premitive.ObjectID, status string
 	}
 	return nil
 }
+
+//func (repo *Repository) ReadVehicles() error {
+//	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+//	defer cancel()
+//
+//	collection := repo.client.Database("test").Collection("models")
+//
+//	var models []domain.VehicleModel
+//	cursor, err := collection.Find(ctx, bson.M{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	if err := cursor.All(ctx, &models); err != nil {
+//		return nil, err
+//	}
+//
+//	return models, nil
+//}

@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"vehicles/internal/domain"
 	"vehicles/types"
@@ -92,20 +91,24 @@ func (cntlr *VehicleController) UpdateVehicleStatus(c echo.Context) error {
 	id := c.Param("id")
 	status := c.QueryParam("status")
 
-	vehicleID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid vehicle ID"})
-	}
-
 	req := types.UpdateStatusReq{
-		ID:     vehicleID,
+		ID:     id,
 		Status: status,
 	}
 
-	err = cntlr.vehicleuc.UpdateVehicleStatus(req)
+	err := cntlr.vehicleuc.UpdateVehicleStatus(req)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update vehicle status"})
 	}
 
 	return c.JSON(http.StatusOK, map[string]string{"message": "Vehicle status updated successfully"})
 }
+
+//func (cntlr *VehicleController) ReadVehicles(c echo.Context) error {
+//	vehicles, err := cntlr.vehicleuc.ReadVechicles()
+//	if err != nil {
+//		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to read vehicles"})
+//	}
+//
+//	return c.JSON(http.StatusOK, vehicles)
+//}

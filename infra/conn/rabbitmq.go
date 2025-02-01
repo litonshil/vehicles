@@ -39,7 +39,7 @@ func CloseRabbitMQ() {
 func PublishMessage(exchange, routingKey string, message interface{}) error {
 	err := ch.ExchangeDeclare(
 		exchange, // Exchange name
-		"direct", // Type
+		"fanout", // Type
 		true,     // Durable
 		false,    // Auto-deleted
 		false,    // Internal

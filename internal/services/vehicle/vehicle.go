@@ -1,10 +1,9 @@
 package vehicle
 
 import (
-	premitive "go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 	"vehicles/internal/domain"
 	"vehicles/types"
-	"time"
 )
 
 type VehicleService struct {
@@ -42,7 +41,7 @@ func (service *VehicleService) CreateVehicle(vehicle types.VehicleReq) error {
 		}
 	}
 
-	if vehicle.ModelDetails.ID != premitive.NilObjectID {
+	if vehicle.ModelDetails.ID != "" {
 		req.ModelDetails = domain.VehicleModel{
 			ID:       vehicle.ModelDetails.ID,
 			BrandID:  vehicle.ModelDetails.BrandID,
@@ -118,7 +117,7 @@ func (service *VehicleService) UpdateVehicleStatus(req types.UpdateStatusReq) er
 		return err
 	}
 
-	go PublishVehicleApproval(req.ID.String(), "1234")
+	go PublishVehicleApproval(req.ID, "1234")
 
 	return nil
 }

@@ -1,44 +1,63 @@
 {
-  "app": {
-    "name": "smart_mess",
-    "port": 8080,
-    "appKeyHeader": "app-key",
-    "appKey": "appkey",
-    "idleTimeout": 30,
-    "readTimeout": 30,
-    "writeTimeout": 30
+
+  "App": {
+    "Name": "vehicle",
+    "Port": 8080,
+    "ReadTimeout": 30,
+    "WriteTimeout": 30,
+    "IdleTimeout": 30,
+    "AppKeyHeader": "app-key",
+    "AppKey": "appkey",
+    "ENV": "local"
   },
-  "db": {
-    "master": {
-      "debug": true,
-      "prepareStmt": true,
-      "host": "db",
-      "port": 3306,
-      "maxIdleConn": 5,
-      "maxLifeTime": 30,
-      "maxOpenConn": 10,
-      "name": "smart_mess_db",
-      "username": "smart_mess_user",
-      "password": "12345678"
+  "Db": {
+    "Master": {
+      "Host": "localhost",
+      "Name": "vehicle",
+      "Port": 3306,
+      "Username": "vehicles_user",
+      "Password": "12345678",
+      "MaxLifeTime": 30,
+      "MaxIdleConn": 1,
+      "MaxOpenConn": 2,
+      "Debug": true,
+      "PrepareStmt": true
     },
-    "replica1": {
-      "port": 3306,
-      "host": "db",
-      "name": "smart_mess_db",
-      "username": "smart_mess_user",
-      "password": "12345678",
-      "debug": true
+    "Replica1": {
+      "Host": "db",
+      "Name": "menu",
+      "Port": 3306,
+      "Username": "vehicles_user",
+      "Password": "12345678",
+      "Debug": true
+    },
+    "Mongo": {
+      "ConnectionString": "mongodb+srv://snewaj:d5JozZrX66g5sSyD@mongoloadcluster.bdsnb.mongodb.net/?retryWrites=true&w=majority&appName=MongoLoadCluster"
     }
   },
-  "cache": {
-    "redis": {
-      "host": "redis",
-      "port": 6379,
-      "username": "",
-      "password": "password123",
-      "valueExpiredIn": 0,
-      "database": 4,
-      "mandatoryPrefix": "smart_mess_"
+  "Cache": {
+    "Redis": {
+      "Host": "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com",
+      "Port": 18972,
+      "Username": "snewaj",
+      "Password": "@pkE@6AeHEKCL3z",
+      "Database": 0,
+      "ValueExpiredIn": 10,
+      "MandatoryPrefix": "user:"
+    }
+  },
+  "Queue": {
+    "Asynq": {
+      "RedisAddr": "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com:18972",
+      "DB": 15,
+      "Concurrency": 10,
+      "Queue": "menu",
+      "SyncTaskQueue": "menu_sync_tasks",
+      "Retention": 168,
+      "RetryCount": 25,
+      "UniquenessTTL": 1,
+      "TaskExecTimeUnit": "SECOND"
     }
   }
+
 }
