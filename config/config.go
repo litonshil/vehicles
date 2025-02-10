@@ -228,10 +228,14 @@ func setDefaultConfig() {
 
 	c.Cache = &CacheClient{
 		Redis: &RedisConfig{
-			Host:     "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com", //"127.0.0.1",
-			Port:     18972,                                                       //6379,
-			Username: "snewaj",                                                    // "",
-			Password: "@pkE@6AeHEKCL3z",                                           //"",
+			Host:     "redis-11627.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com", //"127.0.0.1",
+			Port:     11627,                                                         //6379,
+			Username: "default",                                                     // "",
+			Password: "OjS1c6KlwvCXxOC54N830SjYzSYqI0Li",
+			//Host:     "redis-18972.crce178.ap-east-1-1.ec2.redns.redis-cloud.com", //"127.0.0.1",
+			//Port:     18972,                                                       //6379,
+			//Username: "snewaj",                                                    // "",
+			//Password: "@pkE@6AeHEKCL3z",                                           //"",
 			//Host:            "127.0.0.1",
 			//Port:            6379,
 			//Username:        "", // "",

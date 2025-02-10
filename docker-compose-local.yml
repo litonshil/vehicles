@@ -1,0 +1,97 @@
+version: '3.7'
+
+services:
+  consul:
+    image: consul:1.14.5
+    container_name: consul_dev
+    restart: always
+    ports:
+      - "8500:8500"
+    networks:
+      - vehicles_networks
+
+  db:
+    container_name: vehicles_mysql
+    image: mysql:8.0.31
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.db
+    ports:
+      - "3306:3306"
+    volumes:
+      - vehicles_db:/var/lib/mysql:rw
+#      - ./scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=vehicles_db
+      - MYSQL_USER=vehicles_user
+      - MYSQL_PASSWORD=12345678
+    tty: true
+    networks:
+      - vehicles_networks
+
+  redis:
+    image: 'bitnami/redis:6.0.9'
+    container_name: redis_dev
+    restart: always
+    ports:
+      - "6390:6379"
+    environment:
+      - DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+      - REDIS_PASSWORD=password123
+    volumes:
+      - vehicles_cache:/bitnami/redis/data:rw
+    networks:
+      - vehicles_networks
+
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  vehicles:
+    container_name: vehicles
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    command: serve  # make `serve` into `seed` or `seed --truncate=true` if anyone want to run the seeder
+    volumes:
+      - ./:/project
+    environment:
+      - CONSUL_URL=http://consul_dev:8500
+      - CONSUL_PATH=vehicles
+    tty: true
+    depends_on:
+      - consul
+      - db
+      - redis
+    networks:
+      - vehicles_networks
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+networks:
+  vehicles_networks:
+    name: vehicles_networks
+    driver: bridge
+
+volumes:
+  vehicles_db:
+    name: vehicles-db-data
+  vehicles_cache:
+    name: vehicles-cache-data

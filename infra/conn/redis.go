@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/redis/go-redis/v9"
+	"strconv"
+	"time"
 	"vehicles/config"
 	"vehicles/utils"
 	"vehicles/utils/errutil"
-	"strconv"
-	"time"
 )
 
 var client *redis.Client
@@ -27,7 +27,6 @@ func ConnectCache() {
 	//})
 	userName := conf.Username
 	pass := conf.Password
-	//opt, err := redis.ParseURL("redis://<user>:<pass>@localhost:6379/<db>")
 	opt, err := redis.ParseURL(fmt.Sprintf("redis://%s:%s@%s:%d/%d", userName, pass, conf.Host, conf.Port, conf.Database))
 	if err != nil {
 		panic(err)

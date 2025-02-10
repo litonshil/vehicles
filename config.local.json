@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "smart_mess",
+    "name": "vehicles",
     "port": 8080,
     "appKeyHeader": "app-key",
     "appKey": "appkey",
@@ -9,25 +9,8 @@
     "writeTimeout": 30
   },
   "db": {
-    "master": {
-      "debug": true,
-      "prepareStmt": true,
-      "host": "db",
-      "port": 3306,
-      "maxIdleConn": 5,
-      "maxLifeTime": 30,
-      "maxOpenConn": 10,
-      "name": "smart_mess_db",
-      "username": "smart_mess_user",
-      "password": "12345678"
-    },
-    "replica1": {
-      "port": 3306,
-      "host": "db",
-      "name": "smart_mess_db",
-      "username": "smart_mess_user",
-      "password": "12345678",
-      "debug": true
+    "mongo": {
+      "connectionstring": "mongodb+srv://litonshil:test1234@cluster0.wyncn.mongodb.net/"
     }
   },
   "cache": {
@@ -38,7 +21,7 @@
       "password": "password123",
       "valueExpiredIn": 0,
       "database": 4,
-      "mandatoryPrefix": "smart_mess_"
+      "mandatoryPrefix": "vehicles_"
     }
   }
 }

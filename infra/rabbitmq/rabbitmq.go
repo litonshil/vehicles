@@ -14,7 +14,7 @@ type RabbitMQ struct {
 var rabbitMQ *RabbitMQ
 
 func InitRabbitMQ() *RabbitMQ {
-	connectString := "amqp://guest:guest@localhost:5672/"
+	connectString := "amqps://rqadrnjh:m5ysV7L1KVvjgUfgXnc47nDmJvZ2MYTU@armadillo.rmq.cloudamqp.com/rqadrnjh"
 	fmt.Println("Connecting to RabbitMQ at", connectString)
 
 	rc, err := amqp.Dial(connectString)
